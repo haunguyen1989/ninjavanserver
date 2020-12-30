@@ -4,7 +4,7 @@ const Koa = require('koa');
 const next = require('next');
 
 dotenv.config();
-const port = parseInt(process.env.PORT, 10) || 3000;
+const port = parseInt(process.env.PORT, 10) || 4000;
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 
@@ -81,17 +81,22 @@ app.prepare().then(() => {
     }
 
     async function access_token(ctx) {
-        console.log('GET access_token');
+        console.log('GET access_token ok');
         console.log(ctx.request.body);
 
-        ctx.respond = {
-            "access_token": "YOUR_access_token",
-            "expires": 1,
-            "expires_in": 300,
-            "token_type": "bearer"
-        };
-        ctx.res.statusCode = 200;
+        const posts =
+            {
+                "access_token": "YOUR_access_token",
+                "expires": 1,
+                "expires_in": 300,
+                "token_type": "bearer"
+            }
+        ;
+
+        ctx.response.status = 200;
+        ctx.response.body = posts;
     }
+
 
     async function create_order(ctx) {
 
@@ -104,7 +109,7 @@ app.prepare().then(() => {
         const tracking_number = Math.floor(
             Math.random() * (1000000000 - 10000000) + 10000000
         );
-        ctx.respond = {
+        const posts = {
             "service_type": service_type,
             "service_level": service_level,
             "tracking_number": tracking_number,
@@ -162,7 +167,8 @@ app.prepare().then(() => {
                 }
             }
         };
-        ctx.res.statusCode = 200;
+        ctx.response.status = 200;
+        ctx.response.body = posts;
     }
 
     server.listen(port, () => {
