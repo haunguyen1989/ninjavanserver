@@ -29,10 +29,13 @@ app.prepare().then(() => {
 
     // route definitions
 
+
     router.get('/', list)
         .get('/post/new', add)
         .get('/post/:id', show)
-        .post('/post', create);
+        .post('/post', create)
+        .post('/VN/2.0/oauth/access_token', access_token)
+        .post('/VN/4.1/orders', create_order);
 
     server.use(router.routes());
 
@@ -75,6 +78,91 @@ app.prepare().then(() => {
         post.created_at = new Date();
         post.id = id;
         ctx.redirect('/');
+    }
+
+    async function access_token(ctx) {
+        console.log('GET access_token');
+        console.log(ctx.request.body);
+
+        ctx.respond = {
+            "access_token": "YOUR_access_token",
+            "expires": 1,
+            "expires_in": 300,
+            "token_type": "bearer"
+        };
+        ctx.res.statusCode = 200;
+    }
+
+    async function create_order(ctx) {
+
+        console.log('GET create_order');
+        const bodyData = ctx.request.body;
+        console.log(bodyData);
+        const service_type = ctx.request.body.service_type;
+        const service_level = ctx.request.body.service_level;
+
+        const tracking_number = Math.floor(
+            Math.random() * (1000000000 - 10000000) + 10000000
+        );
+        ctx.respond = {
+            "service_type": service_type,
+            "service_level": service_level,
+            "tracking_number": tracking_number,
+            "requested_tracking_number": "1234-56789",
+            "reference": {
+                "merchant_order_number": "SHIP-1234-56789"
+            },
+            "from": {
+                "name": "John Doe",
+                "phone_number": "+60122222222",
+                "email": "john.doe@gmail.com",
+                "address": {
+                    "address1": "17 Lorong Jambu 3",
+                    "address2": "",
+                    "area": "Taman Sri Delima",
+                    "city": "Simpang Ampat",
+                    "state": "Pulau Pinang",
+                    "country": "MY",
+                    "postcode": "51200"
+                }
+            },
+            "to": {
+                "name": "Jane Doe",
+                "phone_number": "+6212222222222",
+                "email": "jane.doe@gmail.com",
+                "address": {
+                    "address1": "Gedung Balaikota DKI Jakarta",
+                    "address2": "Jalan Medan Merdeka Selatan No. 10",
+                    "kelurahan": "Kelurahan Gambir",
+                    "kecamatan": "Kecamatan Gambir",
+                    "city": "Jakarta Selatan",
+                    "province": "Jakarta",
+                    "country": "ID",
+                    "postcode": "10110"
+                }
+            },
+            "parcel_job": {
+                "is_pickup_required": true,
+                "pickup_address_id": 98989012,
+                "pickup_service_type": "Scheduled",
+                "pickup_service_level": "Premium",
+                "pickup_date": "2018-01-18T00:00:00.000Z",
+                "pickup_timeslot": {
+                    "start_time": "09:00",
+                    "end_time": "12:00",
+                    "timezone": "Asia/Singapore"
+                },
+                "pickup_instructions": "Pickup with care!",
+                "delivery_instructions": "If recipient is not around, leave parcel in power riser.",
+                "delivery_start_date": "2018-01-19",
+                "delivery_timeslot": {
+                    "start_time": "09:00",
+                    "end_time": "22:00",
+                    "timezone": "Asia/Singapore"
+                }
+            }
+        };
+        ctx.res.statusCode = 200;
     }
 
     server.listen(port, () => {
