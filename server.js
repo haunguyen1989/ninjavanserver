@@ -107,7 +107,7 @@ app.prepare().then(() => {
         bodyData.tracking_number = Math.floor(
             Math.random() * (1000000000 - 10000000) + 10000000
         );
-
+        bodyData.tracking_number = bodyData.tracking_number.toString();
         const posts = bodyData;
         ctx.response.status = 200;
         ctx.response.body = posts;
