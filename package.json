@@ -16,6 +16,7 @@
   "dependencies": {
     "@koa/router": "^10.0.0",
     "apollo-boost": "^0.4.9",
+    "awake-heroku": "^2.0.8",
     "dotenv": "^8.2.0",
     "graphql": "^15.4.0",
     "isomorphic-fetch": "^3.0.0",

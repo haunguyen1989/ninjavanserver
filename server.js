@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 const Koa = require('koa');
-
+const { AwakeHeroku } = require("awake-heroku");
 const crypto = require("crypto");
 
 dotenv.config();
@@ -143,3 +143,6 @@ async function cancelOrder(ctx) {
 app.listen(port, () => {
     console.log(`> Ready on http://localhost:${port}`);
 });
+
+AwakeHeroku.add("https://ninjavanserver.herokuapp.com");
+AwakeHeroku.start();
